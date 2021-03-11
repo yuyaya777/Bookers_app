@@ -14,8 +14,13 @@ class BooksController < ApplicationController
 
   def create
     book = Book.new(book_params)
-    book.save
-    redirect_to book_path(book.id)
+    if book.save
+      redirect_to book_path(book.id)
+      flash[:alert] = "Book was succesfully created."
+    else
+      flash[:alert] = "メッセージを入力してください"
+      render action: :index
+    end
   end
 
   def edit
@@ -24,14 +29,20 @@ class BooksController < ApplicationController
 
   def update
     book = Book.find(params[:id])
-    book.update(book_params)
-    redirect_to book_path(book.id)
+    if book.update(book_params)
+      redirect_to book_path(book.id)
+      flash[:alert] = "Book was successfully updated."
+    else
+      flash[:alert] = "メッセージを入力してください"
+      redirect_to book_path(book.id)
+    end
   end
 
   def destroy
     book = Book.find(params[:id])
     book.destroy
     redirect_to books_path
+    flash[:alert] = "Book was successfully destroyed."
   end
 
   private
